@@ -1,16 +1,16 @@
-## Hi there sdasd👋
+# Hi, thanks for stopping by 👋
 
-<!--
-**mle772/mle772** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+### 🙋 Who am I?
+I'm **Minh**, currently studying Mathematics and Computer Science at South Plains College. I'm passionate about algorithms and optimizing Machine Learning and Deep Learning models.
 
-Here are some ideas to get you started:
+### 🔭 What am I currently working on?
+I'm pursuing research in AI, with a focus on **neural network optimization** and **computer vision applications**.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+### 🛠️ What tools do I use?
+- **Languages:** Python
+- **Frameworks:** PyTorch, TensorFlow
+- **Version Control:** Git
+
+### 📫 How to reach me?
+- **Email:** minhkhangle727772@gmail.com
+- **LinkedIn:** [linkedin.com/in/your-profile](https://www.linkedin.com/in/minh-le-712a3630b/)
