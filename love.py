@@ -12,7 +12,7 @@ import turtle as t
 BG = "#05060f"
 FONT = "Segoe UI" if sys.platform.startswith("win") else (
     "Helvetica Neue" if sys.platform == "darwin" else "DejaVu Sans")
-SC = 21          # pixels per heart unit (heart is about 32 units wide)
+SC = 23          # pixels per heart unit (heart is about 32 units wide)
 OY = 0           # vertical offset in pixels
 PALETTE = ["#ff2e4d", "#ff4d6d", "#ff3b3b", "#ff6b81", "#ff1f6b", "#ff5a36"]
 
@@ -75,31 +75,47 @@ def inside(x, y):
     return any(lo <= x <= hi for lo, hi in _intervals(y))
 
 
-# --- pack words into the heart -------------------------------------------
-def overlaps(box, placed):
-    x1, y1, x2, y2 = box
-    return any(x1 < b[2] and x2 > b[0] and y1 < b[3] and y2 > b[1]
-               for b in placed)
+# --- fill the heart row by row --------------------------------------------
+def span(y_top, y_bot):
+    """x-intervals that are inside the heart on the whole band [y_bot, y_top]."""
+    ys = (y_top, (y_top + y_bot) / 2, y_bot)
+    out = _intervals(ys[0])
+    for y in ys[1:]:
+        out = [(max(a, c), min(b, d))
+               for a, b in out for c, d in _intervals(y) if max(a, c) < min(b, d)]
+    return out
 
 
 def pack():
-    """Greedy packing: big words first, smaller ones fill the gaps."""
-    words, boxes = [], []
-    for size in range(20, 6, -1):
+    """Rows of words, justified to the heart's outline (like the video)."""
+    words = []
+    y = 17 * SC
+    while y > -17 * SC:
+        size = rng.choice((9, 10, 11, 12, 13, 14))
         f = font_for(size)
-        tries = 900 if size > 10 else 2500
-        for _ in range(tries):
-            text = rng.choice(PHRASES)
-            w, h = f.measure(text) + 6, f.metrics("linespace") + 2
-            x = rng.uniform(-17 * SC, 17 * SC)
-            y = rng.uniform(-17 * SC, 14 * SC)
-            box = (x - w / 2, y - h / 2, x + w / 2, y + h / 2)
-            corners = [(box[0], box[1]), (box[0], box[3]),
-                       (box[2], box[1]), (box[2], box[3])]
-            if all(inside(cx, cy) for cx, cy in corners) \
-                    and not overlaps(box, boxes):
-                boxes.append(box)
-                words.append((text, x, y, size, rng.uniform(-14, 14)))
+        h = f.metrics("linespace") + 1
+        for lo, hi in span(y, y - h):
+            lo, hi = lo + 6, hi - 6
+            row, used = [], 0
+            while True:
+                for _ in range(8):                       # find a phrase that fits
+                    text = rng.choice(PHRASES)
+                    w = f.measure(text) + 8
+                    if used + w <= hi - lo:
+                        break
+                else:
+                    break
+                row.append((text, w))
+                used += w
+            if not row:
+                continue
+            gap = (hi - lo - used) / len(row)            # justify the row
+            x = lo + gap / 2
+            for text, w in row:
+                words.append((text, x + w / 2, y - h / 2, size,
+                              rng.uniform(-5, 5)))
+                x += w + gap
+        y -= h
     return words
 
 
